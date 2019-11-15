@@ -9,4 +9,4 @@ The Coursework 3 of interest is fitting a regression model to model house prices
 
 Data: 
 A table for coursework2 is given by my lecture Dr. Peter Foster. 
-The data for coursework3 were taken from the public records. They comprise the prices of a random sample of 1728 homes in Saratoga County, New York, USA in 2006, together with the v
+The data for coursework3 were taken from the public records. They comprise the prices of a random sample of 1728 homes in Saratoga County, New York, USA in 2006, together with the values of 15 other variables which may be influential in explaining the price of a house in this area.
