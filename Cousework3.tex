@@ -1,0 +1,496 @@
+\documentclass[12pt]{article}
+
+\usepackage{geometry} % to change the page dimensions
+\geometry{a4paper}
+
+\usepackage{caption}
+\usepackage{graphicx}
+\usepackage{graphics}
+\usepackage{subcaption}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\setcounter{section}{-1}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%opening%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\title{CW3}
+
+\date{May10th 2019}
+
+
+
+
+\begin{document}
+	\maketitle
+	
+	\newpage
+	\tableofcontents
+	\newpage
+	
+	
+
+\section{Introduction}
+The dataset for this report is collect from public records with 1728 observations on the following 16 variables: price-price (1000s of US dollars), lotSize-size of lot (square feet), age-age of house (years), landValue-value of land (1000s of US dollars), livingArea-living are (square feet), pctCollege-percent of neighborhood that graduated college, bedrooms-number of bedrooms, firplaces-number of fireplaces, bathrooms-number of bathrooms (half bathrooms have no shower or tub), rooms-number of rooms, heating-type of heating system, fuel-fuel used for heating, sewer-type of sewer system, waterfront-whether property includes waterfront, newConstruction-whether the property is a new construction, centralAir-whether the house has central air, which is from Saratoga County, New Yord, USA.
+In this report, we will try to fit a regression model which may predict the house price from the other 15 covariates. We do alse explore more features of model we fitted. We will use the transformed variables instead of original variables as follow:
+
+\noindent
+tprice=price/1000
+
+\noindent
+tlotSize=sqrt(lotSize)
+
+\noindent
+tage=sqrt(age)
+
+\noindent
+tlandValue=landValue/1000
+ 
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+\section{Regression Moedel Fitting}	
+	%%%%%%%%%%%%%%%%part (a)%%%%%%%%%%%%%%%%%%%%%%
+	
+	\subsection{a}
+	During this section, we will fit a regression model to predict the house price based on the 12 original predictors and the 3 transformed predictors. 
+
+\begin{verbatim}
+> lm1<-lm(
++ SaratogaHouses$tprice~SaratogaHouses$tlotSize+SaratogaHouses$tage+
++   SaratogaHouses$tlandValue+SaratogaHouses$livingArea+SaratogaHouses$pctCollege+
++   SaratogaHouses$bedrooms+SaratogaHouses$fireplaces+SaratogaHouses$bathrooms+
++   SaratogaHouses$rooms+SaratogaHouses$heating+SaratogaHouses$fuel+
++   SaratogaHouses$sewer+SaratogaHouses$waterfront+SaratogaHouses$newConstruction+
++   SaratogaHouses$centralAir)
+> summary(lm1)
+
+Call:
+lm(formula = SaratogaHouses$tprice ~ SaratogaHouses$tlotSize + 
+SaratogaHouses$tage + SaratogaHouses$tlandValue + SaratogaHouses$livingArea + 
+SaratogaHouses$pctCollege + SaratogaHouses$bedrooms + SaratogaHouses$fireplaces + 
+SaratogaHouses$bathrooms + SaratogaHouses$rooms + SaratogaHouses$heating + 
+SaratogaHouses$fuel + SaratogaHouses$sewer + SaratogaHouses$waterfront + 
+SaratogaHouses$newConstruction + SaratogaHouses$centralAir)
+
+Residuals:
+Min      1Q  Median      3Q     Max 
+-231.67  -35.30   -4.22   27.44  459.56 
+
+Coefficients:
+Estimate Std. Error t value Pr(>|t|)    
+(Intercept)                            1.075e+02  1.975e+01   5.443 5.99e-08 ***
+SaratogaHouses$tlotSize                1.800e+01  5.430e+00   3.315 0.000934 ***
+SaratogaHouses$tage                   -2.496e+00  7.577e-01  -3.294 0.001009 ** 
+SaratogaHouses$tlandValue              9.266e-01  4.740e-02  19.549  < 2e-16 ***
+SaratogaHouses$livingArea              6.875e-02  4.622e-03  14.872  < 2e-16 ***
+SaratogaHouses$pctCollege             -9.171e-02  1.514e-01  -0.606 0.544906    
+SaratogaHouses$bedrooms               -7.828e+00  2.578e+00  -3.037 0.002427 ** 
+SaratogaHouses$fireplaces              1.170e+00  2.980e+00   0.393 0.694708    
+SaratogaHouses$bathrooms               2.164e+01  3.412e+00   6.343 2.88e-10 ***
+SaratogaHouses$rooms                   3.002e+00  9.600e-01   3.127 0.001797 ** 
+SaratogaHouses$heatinghot water/steam -8.805e+00  4.223e+00  -2.085 0.037206 *  
+SaratogaHouses$heatingelectric        -1.910e+00  1.227e+01  -0.156 0.876340    
+SaratogaHouses$fuelelectric           -8.472e+00  1.207e+01  -0.702 0.482998    
+SaratogaHouses$fueloil                -3.676e+00  5.028e+00  -0.731 0.464817    
+SaratogaHouses$sewerpublic/commercial -2.682e-01  3.804e+00  -0.071 0.943794    
+SaratogaHouses$sewernone              -8.963e+00  1.715e+01  -0.523 0.601247    
+SaratogaHouses$waterfrontNo           -1.199e+02  1.551e+01  -7.733 1.78e-14 ***
+SaratogaHouses$newConstructionNo       5.058e+01  7.576e+00   6.676 3.31e-11 ***
+SaratogaHouses$centralAirNo           -9.996e+00  3.471e+00  -2.880 0.004031 ** 
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 58.15 on 1709 degrees of freedom
+Multiple R-squared:  0.6548,	Adjusted R-squared:  0.6511 
+F-statistic: 180.1 on 18 and 1709 DF,  p-value: < 2.2e-16
+
+\end{verbatim}
+The summary results above tell as the coefficients and the p-values of corresponding covariates and also others information which we will not discuss during this secton. P-values is used to distinguish whether a covariate is significant or not by comparing it with the significance level, which is 0.05 here. If the p-value of a precdictor is less than the significance level, it is considered that it apears to be significant in predicting the response. Certainly, we can get this directively from the number of stars at the end of each row. The more stars correspond to the covariate, the more significance impact on predicting response the covariate is.
+
+\bigskip{}
+\noindent
+It can be seen from the results from summary, what have significant impacts on the house price (tprice), those are, what pass the significance level are the lotSize (tlotSize) ($p=0.000934$), age (tage) ($p=0.001009$), landValue (tlandValue) ($p<2*10^{-16}$), livingArea ($p<2*10^{-16}$), bedrooms ($p=0.002427$), bathrooms ($p=2.88*10^{-10}$), rooms ($p=0.001797$), heating type of houses ($p=0.037206$) and whether houses are waterfront ($p=1.78*10^{-14}$), whether they are new construction ($p=3.31*10^{-11}$), whether they have the central Air ($p=0.004031$). They are all significant predictors of house prices (tprice). 
+
+\bigskip{}
+\noindent
+In addition, by stars at the end of each row, we can also see that the lotSize (tlotSize), age (tage), landValue (tlandValue), livingArea, number of bathrooms, waterfront or not, new constructed or not all have larger level of significant impacts on house price (tprice); landValue (tlandValue), number of fireplaces and rooms and centralAir or not have medium level of significant impacts; heating type shows a smaller level of significant impact based on which variables apprear to be significant in predicting the response.
+
+
+\subsection{b}
+By the results from (a), we remove the non-significant variables and refit the model. Firstly, we using the dummy variables to represent the significant categorical variables in order to display model in algebraic form.  
+\begin{verbatim}
+> levels(factor(SaratogaHouses$heating))
+[1] "hot air"         "hot water/steam" "electric"       
+> SaratogaHouses$theating=factor(SaratogaHouses$heating,labels = c("1","2","3"))
+> levels(factor(SaratogaHouses$waterfront))
+[1] "Yes" "No" 
+> SaratogaHouses$twaterfront=factor(SaratogaHouses$waterfront,labels = c("0","1"))
+> levels(factor(SaratogaHouses$newConstruction))
+[1] "Yes" "No" 
+> SaratogaHouses$tnewConstruction=factor(SaratogaHouses$newConstruction,
++                                        labels = c("0","1"))
+> levels(factor(SaratogaHouses$centralAir))
+[1] "Yes" "No" 
+> SaratogaHouses$tcentralAir=factor(SaratogaHouses$centralAir,labels = c("0","1"))
+\end{verbatim}
+Then we fit the new model based on the new transformed dataset.
+\begin{verbatim}
+> lm2<-lm(
++   SaratogaHouses$tprice~SaratogaHouses$tlotSize+SaratogaHouses$tage+
++   SaratogaHouses$tlandValue+SaratogaHouses$livingArea+SaratogaHouses$bedrooms+
++   SaratogaHouses$bathrooms+SaratogaHouses$rooms+SaratogaHouses$theating+
++   SaratogaHouses$twaterfront+SaratogaHouses$tnewConstruction+
++   SaratogaHouses$tcentralAir)
+> summary(lm2)
+
+Call:
+lm(formula = SaratogaHouses$tprice ~ SaratogaHouses$tlotSize + 
+SaratogaHouses$tage + SaratogaHouses$tlandValue + SaratogaHouses$livingArea + 
+SaratogaHouses$bedrooms + SaratogaHouses$bathrooms + SaratogaHouses$rooms + 
+SaratogaHouses$theating + SaratogaHouses$twaterfront + 
+SaratogaHouses$tnewConstruction + 
+SaratogaHouses$tcentralAir)
+
+Residuals:
+Min      1Q  Median      3Q     Max 
+-231.52  -34.96   -4.67   27.78  459.40 
+
+Coefficients:
+Estimate Std. Error t value Pr(>|t|)    
+(Intercept)                       1.028e+02  1.881e+01   5.466 5.27e-08 ***
+SaratogaHouses$tlotSize           1.704e+01  4.688e+00   3.635 0.000286 ***
+SaratogaHouses$tage              -2.584e+00  7.366e-01  -3.508 0.000463 ***
+SaratogaHouses$tlandValue         9.255e-01  4.607e-02  20.088  < 2e-16 ***
+SaratogaHouses$livingArea         6.893e-02  4.514e-03  15.270  < 2e-16 ***
+SaratogaHouses$bedrooms          -7.768e+00  2.560e+00  -3.034 0.002446 ** 
+SaratogaHouses$bathrooms          2.180e+01  3.364e+00   6.481 1.19e-10 ***
+SaratogaHouses$rooms              3.015e+00  9.575e-01   3.149 0.001669 ** 
+SaratogaHouses$theating2         -8.733e+00  4.200e+00  -2.079 0.037753 *  
+SaratogaHouses$theating3         -9.421e+00  4.004e+00  -2.353 0.018752 *  
+SaratogaHouses$twaterfront1      -1.198e+02  1.529e+01  -7.835 8.13e-15 ***
+SaratogaHouses$tnewConstruction1  4.991e+01  7.431e+00   6.717 2.52e-11 ***
+SaratogaHouses$tcentralAir1      -9.912e+00  3.385e+00  -2.929 0.003451 ** 
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 58.07 on 1715 degrees of freedom
+Multiple R-squared:  0.6544,	Adjusted R-squared:  0.652 
+F-statistic: 270.6 on 12 and 1715 DF,  p-value: < 2.2e-16
+\end{verbatim}
+Therefore, the new fitted linear regression equation of y(tprice) for 11 independent variables is 
+\begin{equation}
+\begin{split} 
+&\quad Y = 102.8 + 17.04*X_1 - 2.584*X_2 + 0.9255*X_3 + 0.06893*X_4 - 7.768*X_5\\
+&\quad + 21.80*X_6 + 3.015*X_7\\
+&\quad - 8.733*H_1 - 9.421*H_2 - 119.8*W + 49.91*N - 9.912*C + \varepsilon
+\end{split}
+\end{equation}
+Where Y states the response house price (tprice).
+
+\noindent
+$X_i$ state the i-th significant numerical covariate.
+
+\noindent
+$H_i$ states the dummy variable heating, $H_1=
+\begin{cases}
+1,& \text{house using hot water or steam}\\
+0,& \text{otherwise}
+\end{cases}$
+$H_2=
+\begin{cases}
+1,& \text{house using electric}\\
+0,& \text{otherwise}
+\end{cases}$
+
+\noindent
+W states the dummy variable waterfront, $W=
+\begin{cases}
+1,& \text{house non-waterfront}\\
+0,& \text{house waterfront}
+\end{cases}$
+
+\noindent
+N states the dummy variable new construction, $N=
+\begin{cases}
+1,& \text{house non-newConstruction}\\
+0,& \text{house newConstruction}
+\end{cases}$
+
+\noindent
+C states the dummy variable central air, $C=
+\begin{cases}
+1,& \text{house has no central air}\\
+0,& \text{house has central air}
+\end{cases}$
+
+\noindent
+$\varepsilon$ states the errors.
+
+
+
+
+
+
+
+
+
+\subsection{c}
+During this section, we will use R function ANOVA to compare two models lm1 and lm2, each with 15 and 11 number of covariates.
+\begin{equation}
+\begin{split}
+&\quad lm1 : y1 = \beta_0+\beta_1x_1+...+\beta_{11}x_{11}+\beta_{12}x_{12}+...+\beta_{15}x_{15}+\varepsilon\\
+&\quad lm2 : y2 = \beta_0+\beta_1x_1+...+\beta_{11}x_{11}+\varepsilon
+\end{split}
+\end{equation}
+Where $\{x_1, x_2, ... , x_{11}\}$ are corresponding to variable-set \{lotSize, age, landValue, livingArea, bedrooms, bathrooms, rooms, heating, waterfront, newConstruction, centralAir\}. And $\{x_{12}, x_{13}, x_{14}, x_{15}\}$ are corresponding to variable-set \{pctCollege, fireplaces, fuel, sewer\}. Clearly, $\beta^d = (\beta_{12} \ \beta_{13} \ \beta_{14} \ \beta_{15})^\textbf{T}$\\
+Then, we define the following hypothesis:
+\begin{equation}
+\begin{split}
+&\quad H_0: \beta_{12} = \beta_{13} = \beta_{14} = \beta_{15} = 0\\
+&\quad H_A: \beta_{12} \neq \beta_{13} \neq \beta_{14} \neq \beta_{15} = 0
+\end{split}
+\end{equation}
+
+\begin{verbatim}
+> anova(lm1,lm2)
+Analysis of Variance Table
+
+Model 1: SaratogaHouses$tprice ~ SaratogaHouses$tlotSize + Saratoga
+    -Houses$tage + SaratogaHouses$tlandValue + SaratogaHouses$living
+    -Area + SaratogaHouses$pctCollege + SaratogaHouses$bedrooms + 
+    SaratogaHouses$fireplaces + SaratogaHouses$bathrooms + 
+    SaratogaHouses$rooms + SaratogaHouses$heating + Saratoga
+    -Houses$fuel + SaratogaHouses$sewer + SaratogaHouses$waterfront + 
+    SaratogaHouses$newConstruction +  SaratogaHouses$centralAir
+Model 2: SaratogaHouses$tprice ~ SaratogaHouses$tlotSize + Saratoga
+    -Houses$tage + SaratogaHouses$tlandValue + SaratogaHouses$living
+    -Area + SaratogaHouses$bedrooms + SaratogaHouses$bathrooms + 
+    SaratogaHouses$rooms + SaratogaHouses$theating + 
+    SaratogaHouses$twaterfront + SaratogaHouses$tnewConstruction + 
+    SaratogaHouses$tcentralAir
+  Res.Df     RSS Df Sum of Sq      F Pr(>F)
+1   1709 5777946                           
+2   1715 5783515 -6   -5568.7 0.2745  0.949
+\end{verbatim}
+By the results of anova function, Model 1 is the full model with 15 predictor and Model 2 is the reduced one, it gives us a F statistic test with degree of freedom = 6, and p-value = 0.949 $>> 0.05$. Which is say that, we do not have significant evidence to reject $H_0$. In conclusion, Model 1 is not better than Model 2, and these more predictors in Model 1 /(lm1/) than Model 2 /(lm2/) are not necessary. We can remove them and use the lm2 directly.
+
+
+
+
+
+
+
+\subsection{d}
+\subsubsection{Coefficients}
+Firstly, let's talk about the "rooms" and the numerical variables before the "rooms". We can see by the plus or minus of the coefficients that coefficients of lotSize (tlotSize), landValue (tlandValue), livingArea, bathrooms, rooms are positive. Obiviously, these variables all show that they have positive correlations with the house price (tprice), for example, the larger the livingArea of houses, the more expensive they are. In contract, the coefficients of age (tage) and the number of bedrooms are negative and they are negatively correlated with house price (tprice). 
+
+\bigskip{}
+\noindent
+And then we will talk about categorical variables. It can be seen from the results that, in our model, R automatically retains heatinghot air, waterfrontYes, newContructionYes and centralAirYes as our reference group. Hence, heatinghot water/steam or electric will lower the price of the house compared with heating air; waterfront and centralAir houses will have higher prices than those houses without them. New constructed houses will be cheaper than others (non-newConstruction houses), which also confirms the result above that age are negatively correlated with house price (tprice)
+
+\bigskip{}
+\noindent
+In addition, we can also see that the lotSize (tlotSize), age (tage), landValue (tlandValue), livingArea, number of bathrooms, waterfront or not, new constructed or not all have larger level of significant impacts on house price (tprice); landValue (tlandValue), number of fireplaces and rooms and centralAir or not have medium level of significant impacts; heating type shows a smaller level of significant impact based on which variables apprear to be significant in predicting the response.
+
+\subsubsection{Residual}
+The adjusted $R^2$ indicated that 65.2\% of the variation in houses prices can be predicted by the model containing lotSize (tlotSize), landValue (tlandValue), livingArea, bathrooms, rooms, heating, waterfront, newContruction and centralAir which is quite high so predictors from the regression equation are fairly reliable. 
+
+
+
+\subsection{e}
+
+\begin{figure}[!htb]
+	\centering
+	\includegraphics[height=9cm,width=10cm]{"1-4".pdf} 
+	\caption{}
+\end{figure}
+
+\begin{figure}[!htb]
+	\centering
+	\includegraphics[height=8.7cm,width=10cm]{"5-9".pdf} 
+	\caption{}
+\end{figure}
+
+\begin{figure}[!htb]
+	\centering
+	\includegraphics[height=8.7cm,width=10cm]{"9-12".pdf} 
+	\caption{}
+\end{figure}
+
+\noindent
+Look at these plots, we can see that there’are all clear “triangle approximation” phenomenon. The distribution of the residuals is quite well concentrated around 0 for small fitted values, but they get more and more spread out as the fitted values increase. The error terms have obvious heteroscedasticity. The standard linear regression assumption is that the variance is constant across the entire range. When this assumption isn’t valid, such as in this example, we will think that the assumptions are violated.
+
+\section{2}
+Before beginning this section, we will use the following code to obtain the standardised residuals from model lm2.
+\begin{verbatim}
+std.res=rstandard(lm2)
+
+\end{verbatim}
+
+\subsection{f}
+\begin{verbatim}
+> par(mfrow=c(1,1))
+> set.seed(914)
+> 
+> N<-1728
+> std.res1<-sort(std.res)
+> pn=0
+> for(k in 1: N){
++   pn[k]=((k-3/8)/(N+1/4))}  
+> theoretical.quantiles<-qnorm(pn)
+> 
+> plot(theoretical.quantiles, std.res1,  
++      main="Normal Q-Q plot of random Normal data (n=1728)",
++      ylab = "standardised residuals")
+> abline(a=0, b=1, col="green")
+\end{verbatim}
+
+\begin{figure}[!htb]
+	\centering
+	\includegraphics[height=9cm,width=10cm]{"S-T".pdf} 
+	\caption{}
+\end{figure}
+
+\noindent
+By the Figure 4, we can see that it is a "heavier tail" plot, where the deviation from the straight line is large. In this case we see that the tails are observed to be ‘heavier’ (have larger values) than what we would expect under the standard modeling assumptions. The points are follow the other shape than the straight line. Hence we could think that Normality is not a tenable assumption.
+
+\subsection{g}
+During this part, we will test the null hypothesis that the standardised residuals is a random
+sample from the standard Normal distribution N(0,1). The alternative is that the data is not standard Normally distributed.
+Firstly, we will calculate the value of KS test by calculating the largest difference between corresponding empirical distribution function $S_n(X_{(i)})$ and distribution function $F_0(X_{(i)})$ which we believe coincides.
+
+\begin{verbatim}
+> x.ord<-std.res1
+> 
+> x.ecdf<-(1:N)/N
+> 
+> y<-pnorm(x.ord)
+> 
+> diff1=x.ecdf-y
+> md1=max(diff1)
+> dn.plus=max(md1,0)
+> dn.plus
+[1] 0.07283713
+> x.KS1=x.ord[dn.plus==diff1]
+> 
+> diff2=y-x.ecdf
+> md2=max(diff2)
+> md2=md2+(1/N)
+> dn.minus=max(md2,0)
+> dn.minus
+[1] 0.05479336
+> x.KS2=x.ord[dn.minus==diff2+(1/N)]
+> 
+> KSstat=max(dn.minus, dn.plus)
+> KSstat
+[1] 0.07283713
+> 
+> if(dn.minus < dn.plus) x.KSstat=x.KS1
+> if(dn.minus > dn.plus) x.KSstat=x.KS2
+> x.KSstat
+706 
+0.6157866
+\end{verbatim}
+The values of the K-S test statistics is D = 0.07283713 which has an asymptotic p-value of 0.6157866. Our conclusion then is that there is no significant evidence against the null hypothesis and so we can regard the data as a random sample from the N(0, 1) distribution.
+
+
+
+\subsection{h}
+\begin{figure}[!htb]
+	\centering
+	\includegraphics[height=10cm,width=10cm]{"KStest".pdf} 
+	\caption{}
+\end{figure}
+By the value of (g), we obtain that the point is $X_{(767)=0.6157866}$ and the difference is approximately 0.073.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\end{document}

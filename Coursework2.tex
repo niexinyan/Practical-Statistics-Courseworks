@@ -1,0 +1,558 @@
+\documentclass[12pt]{article}
+
+\usepackage{geometry} % to change the page dimensions
+\geometry{a4paper}
+
+\usepackage{caption}
+\usepackage{graphicx}
+\usepackage{graphics}
+\usepackage{subcaption}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%opening%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\title{Whether transport modes differ in their respective probability of different casualty severity}
+
+\date{April 5th 2019}
+
+
+
+
+
+\begin{document}
+\maketitle
+
+\newpage
+\tableofcontents
+\newpage
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%part (i)%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Description of the Data}
+According to the given data, the suitable probability model is a product of five independent Multinomial distributions, one for \textbf{Pedestrian}, the second one for \textbf{Pedal Cycle}, the third one for \textbf{Powered 2 Wheeler}, the forth one for \textbf{Car} and the fifth one for \textbf{Other Vehicles}. ie.
+
+\begin{equation}
+\begin{split}
+&\quad MN(N_1 = 5181, \textbf{p}_1 = (p_{11},p_{12},p_{13}))\times MN(N_2 = 4623, \textbf{p}_2 = (p_{21},p_{22},p_{23}))\\
+&\times MN(N_3 = 4502, \textbf{p}_3 = (p_{31},p_{32},p_{33}))\times MN(N_4 = 10185, \textbf{p}_4 = (p_{41},p_{42},p_{43}))\\
+&\times MN(N_5 = 2708, \textbf{p}_5 = (p_{51},p_{52},p_{53}))
+\end{split}
+\end{equation}
+In this question, we will study the respective proportions of the five transportation groups defined by the five modes of transport in the three casualty severities levels.
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%part (ii)%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Data Matrix and Proportion Table}
+In this section, we will read the data as a matrix into R and comment informally on whether the five modes of transport differ in their respective probabilities of different casualty severity by proportion table.
+\begin{verbatim}
+> severity <- matrix(
++ c(65,773,4343,14,475,4134,22,488,3992,25,310,9850,6,146,2556),
++ nrow = 5,byrow = TRUE)
+ 
+> dimnames(severity) <- list(
++ c("Pedestrian","Pedal Cycle","Powered 2 Wheeler","Car","Other Vehicles"),
++ c("Fatal","Serious","Slight"))
+  
+> names(dimnames(severity)) <- c("Mode of Transport","Casualty Severity")
+  
+> severity
+                    Casualty Severity
+Mode of Transport   Fatal Serious Slight
+Pedestrian           65     773   4343
+Pedal Cycle          14     475   4134
+Powered 2 Wheeler    22     488   3992
+Car                  25     310   9850
+Other Vehicles        6     146   2556
+  
+> addmargins(severity)
+                    Casualty Severity
+Mode of Transport   Fatal Serious Slight   Sum
+Pedestrian           65     773   4343  5181
+Pedal Cycle          14     475   4134  4623
+Powered 2 Wheeler    22     488   3992  4502
+Car                  25     310   9850 10185
+Other Vehicles        6     146   2556  2708
+Sum                 132    2192  24875 27199
+  
+> pt <- prop.table(severity,1)
+> pt
+                     Casualty Severity
+Mode of Transport         Fatal    Serious    Slight
+Pedestrian        0.012545841 0.14919900 0.8382552
+Pedal Cycle       0.003028337 0.10274713 0.8942245
+Powered 2 Wheeler 0.004886717 0.10839627 0.8867170
+Car               0.002454590 0.03043692 0.9671085
+Other Vehicles    0.002215657 0.05391433 0.9438700
+\end{verbatim}
+By calculating the number of casualties with different casualty severity in a certain type of transport divided by the total number of casualties in this type of transport, we get the appropriate proportion table including $3 \times 5 = 15$ values. These proportions of five groups are obviously different, so I divide the five groups into 3 combinations to compare.\\[7pt]
+First one is \textbf{Pedestrians} itself. Obviously, \textbf{Pedestrians} are the most vulnerable, both the "Fatal" and the "Serious" proportions of the  \textbf{Pedestrians} are the maximum in the same columns respectively.  The "Fatal" is even 3-5 times larger than others. The "Slight" proportion is the smallest one in its column. But even so, we cannot say that walking is the most unsafe way of transport, because the total number of pedestrian injuries in the sample dataset is half of car injuries.\\[8pt]
+The second combination is \textbf{Pedal Cycle} and \textbf{Powered 2 Wheeler}.
+\begin{verbatim}
+> abs(pt[2,]-pt[3,])
+Fatal     Serious      Slight 
+0.001858380 0.005649134 0.007507515 
+\end{verbatim}
+The difference between \textbf{Pedal Cycle} and \textbf{Powered 2 Wheeler} for all of three severity are extremely small at 0.002, 0.006 and 0.008 level respectively.
+\begin{verbatim}
+> abs(pt[2,]-pt[3,])/pt[3,]
+Fatal     Serious      Slight 
+0.380292215 0.052115580 0.008466641 
+\end{verbatim}
+While we can see that for "Fatal", the \textbf{Powered 2 Wheeler} sample proportion is 38\% bigger than the \textbf{Pedal Cycle} sample proportion. It's not hard to predict. Because in the fairly small samples, a small change may lead to huge change of proportions.\\[8pt]
+Now, let's look at the third combination of \textbf{Car} and \textbf{Other Vehicles}.
+##Therefore, the fitted linear regression equation of y(tprice) for 15 independent variables is 
+##\[ tprice = 107.5 + 18*tlotsize - 2.496*tage + 0.9266*tlandvalue + 0.06875*livingArea - 0.09171*pctCollege
+## - 7.828* bedrooms + 1.170*fireplaces + 21.64*bathrooms + 3.002*rooms - 8.805*heating(hot water/steam)
+## - 1.910*heating(electric) - 8.472*fuel(electric) - 3.676*fuel(oil) - 0.2682*sewer(public/commercial)
+## - 8.963*sewer(none) - 119.9*no waterfront + 50.58*no newConstruction - 9.996*no centralAir\]
+##It can be seen from the regression function, what have significant impacts on the house price (tprice), those are,
+## what pass the significance test of regression coefficient are the lotSize (tlotSize), age (tage),
+## landValue (tlandValue), livingArea, bedrooms, bathrooms, rooms, heating type of houses and whether houses are
+## waterfront, whether they are new construction, whether they have the central Air. Firstly, let's talk about rooms
+## and the numerical variables before the rooms. We can see by the plus or minus of the coefficients that the
+## coefficients of lotSize (tlotSize), landValue (tlandValue), livingArea, bathrooms, rooms are positive. Obiviously,
+## these variables all show that they have posiive correlations with the house price (tprice), for example,
+## the larger the livingArea of houses, the more expensive they are. In contract, the coefficients of age (tage) and
+## the number of bedrooms are negative and they are negatively correlated with house price (tprice). 
+##And then we will talk about categorical variables. It can be seen from the results that, in our model,
+## R automatically retains heatinghot air, waterfrontYes, newContructionYes and centralAirYes as our reference group.
+## Hence, heatinghot water/steam or electric will lower the price of the house compared with heating air; waterfront
+## and centralAir houses will have higher prices than those houses without them. New constructed houses will be cheaper
+## than others (non-newConstruction houses). In addition, we can also see that the lotSize (tlotSize), age (tage),
+## landValue (tlandValue), livingArea, number of bathrooms, waterfront or not, new constructed or not all have
+## larger level of significant impacts on house price (tprice); landValue (tlandValue), number of fireplaces and rooms
+## and centralAir or not have medium level of significant impacts; heating type shows a smaller level of significant
+## impact based on which variables apprear to be significant in predicting the response.
+\begin{verbatim}
+> abs(pt[4,]-pt[5,])
+Fatal      Serious       Slight 
+0.0002389328 0.0234774109 0.0232384781 
+\end{verbatim}
+
+\bigskip{}
+\noindent
+Let's begin with "Fatal", the \textbf{Car} and \textbf{Other Vehicles} proportions have little difference of approximately 0.0002. As for "Serious" and "Slight", these two proportions have similar differences at 0.02 level. 
+
+\bigskip{}
+\noindent
+\begin{verbatim}
+> abs(pt[4,]-pt[5,])/pt[5,]
+Fatal    Serious     Slight 
+0.10783832 0.43545773 0.02462042 
+\end{verbatim}
+
+\bigskip{}
+\noindent
+From above, for "Serious", the \textbf{Car} sample proportion is 44\% smaller than the \textbf{Other Vehicles} sample proportion. Again, a small sample size makes a small difference look very large.\\[10pt]
+In conclusion, we can know that \textbf{pedestrians} are most likely to be seriously injured or even killed.  \textbf{Pedal Cycle} and \textbf{Powered 2 Wheeler} have a very similar proportion. Due to the large difference in proportions (for "Serious") and sample size (10185 and 2708), it is hard to compare which of \textbf{Car} and \textbf{Other Vehicles} is safer directly, but we can see from the given data that \textbf{Car} causes the highest number of casualties.  
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%part (iii)%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Histogram of Proportion Data and Comment}
+The following R code plots the data by different casualty severity with separate bars for five modes of transport.
+\begin{verbatim}
+> barplot(pt,beside=TRUE,
++ legend.text=TRUE,
++ args.legend = list(x = "topleft"),
++ ylim=c(0,1),ylab="Proportions",
++ xlab="Mode of Transport",
++ main="The Casualty Severity Data",
++ col=c("lightgreen", "lightblue","lightpink","orange","purple"))
+\end{verbatim}
+Figure 1 shows graphically the calculated proportion of casualty severity above. 
+\begin{figure}[!htb]
+	\centering
+	\includegraphics[height=11.5cm,width=16cm]{"barplot".pdf} 
+	\caption{}
+\end{figure}\\
+We get a similar result. \textbf{Pedestrian} are significantly higher than other modes in "Fatal" and "Serious" and lower than others in "Slight". Hence \textbf{Pedestrian} are more likely be involved in fatal and serious accidents. The \textbf{Pedal Cycle} and \textbf{Powered 2 Wheeler} sample proportions are close. Compared with \textbf{Car} and \textbf{Other Vehicles}, for "Serious", the proportion of \textbf{Car} is smaller than \textbf{Other Vehicles}. While for "Slight", \textbf{Car} is bigger than \textbf{Other Vehicles}. In addition, the proportions of "Slight" are far higher than those of "Serious", which are much higher than "Fatal".  
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%part (iv)%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\section{Relevant Statistical Hypotheses and Test}
+Up to now, we model the given data by 5 different Multinomial distribution with parameters $N_1=5181$ and $\textbf{p}_1$ for the \textbf{Pedestrian} group, $N_2=4623$ and $\textbf{p}_2$ for the \textbf{Pedal Cycle} group, $N_3=4502$ and $\textbf{p}_3$ for the \textbf{Powered 2 Wheeler} group, $N_4=10185$ and $\textbf{p}_4$ for the \textbf{Car} group, $N_5=2708$ and $\textbf{p}_5$ for the \textbf{Other Vehicles} group.\\[7pt]
+We wish to test the null hypothesis $H_0$ : $\textbf{p}_1=\textbf{p}_2=\textbf{p}_3=\textbf{p}_4=\textbf{p}_5$   \textbf{vs}  $H_1$ : $\textbf{p}_1\not=\textbf{p}_2\not=\textbf{p}_3\not=\textbf{p}_4\not=\textbf{p}_5$. 
+\begin{verbatim}
+> test1<-chisq.test(severity)
+> test1
+
+Pearson's Chi-squared test
+
+data:  severity
+X-squared = 870.25, df = 8, p-value < 2.2e-16
+\end{verbatim}    
+\begin{verbatim}
+> df<-(3-1)*(5-1)
+> df
+[1] 8
+
+> qchisq(0.95,df)
+[1] 15.50731
+\end{verbatim}
+Under $H_0$, $X^2$ can be approximately regarded as distributed as $\chi^2((r-1)(c-1))$. Determined from a $\chi^2$ distribution having (3-1)(5-1) = 8 degrees of freedom, the critical value is $\chi^2(8,0.95) = 15.50731$\\[7pt]
+Since the observed value of $X^2$ is 870.25 which is far larger than 15.50731, we get a strongly significant evidence against $H_0$.\\[7pt]
+Alternatively, the $p$-value for the observed value of $X^2$ is less than 2.2e-16, which is near 0 and far less than 0.05. We can reject $H_0$.\\[7pt]
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%part (v)%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\section{Residuals analysis}  
+To explore why we may have rejected $H_0$, we can look at some sets of residuals in R.
+\begin{verbatim}
+> test1$observed
+Casualty Severity
+Mode of Transport   Fatal Serious Slight
+Pedestrian           65     773   4343
+Pedal Cycle          14     475   4134
+Powered 2 Wheeler    22     488   3992
+Car                  25     310   9850
+Other Vehicles        6     146   2556
+
+
+> test1$expected
+Casualty Severity
+Mode of Transport      Fatal  Serious   Slight
+Pedestrian        25.14401 417.5430 4738.313
+Pedal Cycle       22.43597 372.5731 4227.991
+Powered 2 Wheeler 21.84874 362.8216 4117.330
+Car               49.42902 820.8214 9314.750
+Other Vehicles    13.14225 218.2410 2476.617
+
+
+> test1$residuals
+Casualty Severity
+Mode of Transport         Fatal    Serious    Slight
+Pedestrian         7.94833712  17.395482 -5.742873
+Pedal Cycle       -1.78099492   5.306501 -1.445503
+Powered 2 Wheeler  0.03235922   6.571779 -1.953197
+Car               -3.47468218 -17.829728  5.545892
+Other Vehicles    -1.97015362  -4.890074  1.595142
+
+
+> test1$residuals^2
+Casualty Severity
+Mode of Transport          Fatal   Serious    Slight
+Pedestrian        63.176063030 302.60280 32.980590
+Pedal Cycle        3.171942912  28.15895  2.089478
+Powered 2 Wheeler  0.001047119  43.18828  3.814980
+Car               12.073416247 317.89920 30.756915
+Other Vehicles     3.881505296  23.91282  2.544477
+
+
+> test1$stdres
+Casualty Severity
+Mode of Transport         Fatal    Serious     Slight
+Pedestrian         8.85564546  20.163674 -21.836104
+Pedal Cycle       -1.95962088   6.074449  -5.427880
+Powered 2 Wheeler  0.03550968   7.502756  -7.314704
+Car               -4.40397402 -23.510596  23.988498
+Other Vehicles    -2.08127615  -5.374453   5.750835
+\end{verbatim}
+The residual values(by Pearson's chi-square test) and their squared values indicate that the largest contribution to the value of observed value $X^2$ come from the "Serious" category for both \textbf{Pedestrian} and \textbf{Car}. In addition, we can see that these two modes of transport also contribute large residuals in "Fatal" and "Slight" categories than other modes.\\ 
+The residuals under "Serious" are significantly higher than the other two categories. As for "Serious" casualties, we find fairly more \textbf{Pedestrian}, more \textbf{Pedal Cycle}, more \textbf{Powered 2 Wheeler}, and fairly less \textbf{Car}, less \textbf{Other Vehicles} than expect number under $H_0$.\\
+The standardised Pearson residuals show that all of the residuals are significant different from zero except the "Fatal" of \textbf{Powered 2 Wheeler}. 
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%part (vi)%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Goodness-of-fit Test}
+We have mentioned above that, under $H_0$, the value of test statistic should satisfies $\chi^2$ distribution with appropriate degrees of freedom. This section we will verify this.\\
+
+\noindent
+Using the code as followed we can simulate $B = 5000$ random vectors from the 
+
+\bigskip{}
+\noindent
+\begin{equation}
+\begin{split}
+&\quad MN(N_1 = 5181, \textbf{p}_1)\times MN(N_2 = 4623, \textbf{p}_2)\times MN(N_3 = 4502, \textbf{p}_3)\\
+&\times MN(N_4 = 10185, \textbf{p}_4)\times MN(N_5 = 2708, \textbf{p}_5)
+\end{split}
+\end{equation} 
+
+\bigskip{}
+\noindent
+distribution, where $\textbf{p}_1=\textbf{p}_2=\textbf{p}_3=\textbf{p}_4=\textbf{p}_5=\textbf{p}$. For each data set, the Pearson $X^2$ statistic is calculated using R function $chisq.test$ and its value is stored in a vector. 
+
+\begin{verbatim}
+> p1.hat<- 132/27199
+> p2.hat<-2192/27199
+> p3.hat<-24875/27199
+> pr<- c(p1.hat,p2.hat,p3.hat)
+> pr
+[1] 0.00485312 0.08059120 0.91455568
+> B=5000
+> test.sim=0
+> for (i in 1:B) {
++ y1<-rmultinom(n=1,size=5181,pr) 
++ y2<-rmultinom(n=1,size=4623,pr)
++ y3<-rmultinom(n=1,size=4502,pr)
++ y4<-rmultinom(n=1,size=10185,pr)
++ y5<-rmultinom(n=1,size=2708,pr)
++ ysim<-t(cbind(y1,y2,y3,y4,y5))
++ test.sim[i]<-chisq.test(ysim,p=pr)$statistic
++ }
+\end{verbatim}
+The following code then produces a histogram of the null empirical sampling distribution of $X^2$ and the superimposes the $\chi^2(df=8)$ pdf onto it. 
+\begin{verbatim}
+> hist(test.sim,freq=F,ylim=c(0,0.15),
++ main="Graph of simulated X^2 values (B=5000) 
++ with chi-squared (df=8)",
++ col="Lightblue",cex.main=1)
+ 
+> xx=seq(from=0, to=30, length.out=500)
+> dxx=dchisq(xx,df=8)
+> lines(xx,dxx,col="Blue",lwd=2)
+\end{verbatim} 
+
+\begin{figure}[h]
+		\centering
+	\includegraphics[height=8cm,width=10cm]{"5000-5-8".pdf}
+\end{figure}
+Figure shows us that the fit appears to be very good.
+
+
+
+\newpage
+\section{Confidence Intervals}
+\subsection{Difference between the probability of a "Seriously" injured \textbf{Pedestrian} and a \textbf{Car} driver}
+Since these two probabilities are from two different Multinomial Distribution, we will calculate CI for the difference between them directly by the following code.
+\begin{verbatim}
+> y12.hat=773
+> y42.hat=310
+
+> n1=5181
+> n4=10185
+
+> p12.hat=y12.hat/n1
+> p42.hat=y42.hat/n4
+> diff=p12.hat-p42.hat
+
+> v12<-p12.hat*(1-p12.hat)/n1
+> v42<-p42.hat*(1-p42.hat)/n4
+> se1=v12+v42
+
+> crit.val1<-qnorm(1-0.05/2)
+> ci1.1=diff-crit.val1*sqrt(se1)
+> ci1.2=diff+crit.val1*sqrt(se1)
+
+> ci1.1
+[1] 0.108503
+> ci1.2
+[1] 0.1290212
+\end{verbatim}
+So, the approximate 95\% confidence intervals for difference between the probability of a "Seriously" injured \textbf{Pedestrian} and a \textbf{Car} driver is $(0.108503, 0.1290212)$.
+
+
+
+
+
+\subsection{Difference between the probability of a "Serious" injured cyclist and a "Slight" injured cyclist}
+First, we can regard the Casualty Severity of Cyclist as a Multinomial Distribution $MN ( N_2 = 4623, \textbf{p}_2 = ( p_{21}, p_{22}, p_{23}))$ with $Y_{21} = 14$, $Y_{22} = 475$, $Y_{23} = 4134$.
+Then we estimate $\hat{p_{22}} - \hat{p_{23}}$ by: \[\hat{p_{22}} - \hat{p_{23}} = \frac{Y_{22}}{N_2} - \frac{Y_{23}}{N_2}\]We have that \[V(p_{22}-p_{23}) = \frac{V(Y_{22})}{N^2} + \frac{V(Y_{23})}{N^2} - 2 \times \frac{Cov(Y_{22}, Y_{33})}{N^2}\]Since $E(Y_{22}) = N_2p_{22}$, $V(Y_{22})=N_2p_{22}(1-p_{22})$ and $Y_{23}$ are the same. We do also have $Cov(Y_{22}, Y_{33})=-N_2p_{22}p_{23}$, we can substitute them into the equation above and replace the all of "p" by estimator to get\[estimated \quad  V(\hat{p_{22}}-\hat{p_{23}})=\frac{\hat{p_{22}}(1-\hat{p_{22}})}{N_2}+\frac{\hat{p_{23}}(1-\hat{p_{23}})}{N_2}+2 \times \frac{\hat{p_{22}}\hat{p_{23}}}{N_2}\]
+So that the approximate 95\% confidence intercals for difference between the probability of a "Serious" injured cyclist and a "Slight" injured cyclist is \[\Bigl(\hat{p_{22}}-\hat{p_{23}}\pm \Phi^{-1}(1-0.025) \times \sqrt{estimated \quad  V(\hat{p_{22}}-\hat{p_{23}})}\Bigl)\]
+The following code constructs a function to calculate the CI we wanted.
+\begin{verbatim}
+> prop.diff.ci<-function(y22, y23, n2=4623, level=0.95){
++ p22.hat<-y22/n2
++ p23.hat<-y23/n2
++ diff<-p22.hat-p23.hat
++ 
++ v22<-p22.hat*(1-p22.hat)/n2
++ v23<-p23.hat*(1-p23.hat)/n2
++ cab2<- -p22.hat*p23.hat/n2
++ 
++ se2<-sqrt(v22+v23-2*cab2)
++ 
++ crit.val2<-qnorm((1+level)/2)
++ 
++ ci2<-0
++ 
++ ci2[1]<- diff - crit.val2*se2
++ ci2[2]<- diff + crit.val2*se2
++ 
++ return(ci2)
++ }
+> prop.diff.ci(475, 4134, n=4623, level=0.95)
+[1] -0.8090243 -0.7739305
+\end{verbatim} 
+
+\bigskip
+\noindent
+So, the approximate 95\% confidence intervals for difference between the probability of a "Serious" injured cyclist and a "Slight" injured cyclist is $(-0.8090243, -0.7739305)$.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+       
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\end{document}
